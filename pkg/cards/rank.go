@@ -2,7 +2,7 @@ package cards
 
 // Rank defines the possible values of a Card
 // internally represented by a uint8, so numeric comparison is possible.
-type Rank uint8
+type Rank int
 
 const (
 	ACE Rank = iota + 1
@@ -36,8 +36,8 @@ var rankNames = map[Rank]string{
 	KING:  "King",
 }
 
-func (r Rank) String() string {
-	return rankNames[r]
+func (r *Rank) String() string {
+	return rankNames[*r]
 }
 
 func AllRanks() [13]Rank {

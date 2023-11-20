@@ -10,10 +10,12 @@ type Card struct {
 	CardColor CardColor
 }
 
-func NewCard(s Suit, r Rank) Card {
-	return Card{s, r, s.CardColor()}
+// NewCard will return a new *Card with the argument Suit and Rank.
+// This function will never return nil.
+func NewCard(s Suit, r Rank) *Card {
+	return &Card{s, r, s.CardColor()}
 }
 
-func (c Card) String() string {
+func (c *Card) String() string {
 	return fmt.Sprintf("%v of %v", c.Rank, c.Suit)
 }
