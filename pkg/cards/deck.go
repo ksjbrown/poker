@@ -5,9 +5,7 @@ import (
 	"math/rand"
 )
 
-const (
-	deckSize int = 52
-)
+const deckSize int = 52
 
 // Deck defines a container for playing Cards, and provides some useful methods for working with a Deck.
 //
@@ -15,22 +13,26 @@ const (
 // Support for a 54 card Deck with 2 Jokers may be considered in the future.
 type Deck struct {
 
-	// array of pointers to Cards, every element should not be nil if created by NewDeck
-	Cards [deckSize]*Card
+	// array of Cards
+	Cards [deckSize]Card
 
 	// index of the next card to be dealt.
 	nextCard int
 }
 
 // NewDeck creates a new deck of cards with 52 playing cards.
-func NewDeck() *Deck {
-	deck := Deck{[deckSize]*Card{}, 0}
+func NewDeck() (*Deck, error) {
+	deck := Deck{[deckSize]Card{}, 0}
 	for i, suit := range AllSuits() {
 		for j, rank := range AllRanks() {
-			deck.Cards[i*13+j] = NewCard(suit, rank)
+			card, err := NewCard(rank, suit)
+			if err != nil {
+				return &deck, err
+			}
+			deck.Cards[i*rankCount+j] = *card
 		}
 	}
-	return &deck
+	return &deck, nil
 }
 
 // CardsDealt returns the number of cards that have already been dealt.
@@ -54,39 +56,39 @@ func (d *Deck) Reset() {
 
 // Shuffle returns all dealt cards to the deck, and randomises the deal order.
 func (d *Deck) Shuffle() {
-	count := len(d.Cards)
 	for i := range d.Cards {
-		j := i + rand.Intn(count-i)
+		j := i + rand.Intn(deckSize-i)
 		d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
 	}
 	d.Reset()
 }
 
-// DealCards will return a slice of *Card, whose length is equal to the argument int value.
+// DealCards will return a slice of Cards, whose length is equal to the argument int value.
+// The slice contains copies of the internal card array, so operations like Shuffle will not affect the return result of this function.
 //
 // If the index is negative, an empty slice is returned with an error value.
 // If the index exceeds the number of remaining cards in the deck, an empty slice is returned with an error value.
 // Otherwise, the dealt cards internal counter is incremented, and a slice is returned, containing the same number of cards as the argument int value.
-func (d *Deck) DealCards(i int) ([]*Card, error) {
+func (d *Deck) DealCards(i int) (*[]Card, error) {
 	if i < 0 {
-		return []*Card{}, fmt.Errorf("cannot deal negative number of cards: %v", i)
+		return nil, fmt.Errorf("cannot deal negative number of cards: %v", i)
 	}
 	if i > d.CardsRemaining() {
-		return []*Card{}, fmt.Errorf("attempted to deal %v cards, but only %v remaining", i, d.CardsRemaining())
+		return nil, fmt.Errorf("attempted to deal %v cards, but only %v remaining", i, d.CardsRemaining())
 	}
-	cards := d.Cards[d.nextCard : d.nextCard+i]
+	cards := make([]Card, i)
+	copy(cards, d.Cards[d.nextCard:d.nextCard+i])
 	d.nextCard = min(len(d.Cards), d.nextCard+i)
-
-	return cards, nil
+	return &cards, nil
 }
 
 // DealCard is the same as DealCards, but deals a single card.
 //
-// In case of the same error conditions, a nil pointer is returned.
+// In case of the same error conditions, a zero value card is returned with an error
 func (d *Deck) DealCard() (*Card, error) {
 	cards, err := d.DealCards(1)
-	if len(cards) != 1 {
+	if err != nil {
 		return nil, err
 	}
-	return cards[0], err
+	return &(*cards)[0], nil
 }

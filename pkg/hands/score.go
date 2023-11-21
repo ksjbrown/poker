@@ -20,6 +20,6 @@ type Score struct {
 // A magnitude of 2 indicates the HandRanks of the hands are equal, but the winning has a better variant of the HandRank.
 // A magnitude of 2 indicates that the HandRanks are equal, but the winning hand has better kicker cards.
 // A return value of 0 means that one hand is not better than the other.
-func (hs Score) CompareTo(other Score) int {
+func (hs Score) Compare(other Score) int {
 	panic("not yet implemented")
 }

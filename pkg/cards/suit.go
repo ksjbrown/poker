@@ -1,38 +1,29 @@
 package cards
 
-// Suit defines an enum of all possible card suits. 
-// 
+// Suit defines an enum of all possible card suits.
+//
 // A card can have a suit of Spades, Clubs, Hearts or Diamonds.
 // Additionally, a CardColor (one of Red or Black) can be determined via the CardColor() method.
-type Suit string
+type Suit int
 
 const (
-	CLUBS    Suit = "Clubs"
-	DIAMONDS Suit = "Diamonds"
-	HEARTS   Suit = "Hearts"
-	SPADES   Suit = "Spades"
+	CLUBS Suit = iota + 1
+	DIAMONDS
+	HEARTS
+	SPADES
 )
 
-// CardColor defines the color of a card, based on it's Suit value.
-// It can be either Red or Black, and can be accessed from a Suit via the CardColor method().
-type CardColor string
-
-const (
-	RED   CardColor = "Red"
-	BLACK CardColor = "Black"
-)
-
-// suitColors is an internal mapping of a Suit to it's appropriate CardColor
-var suitColors = map[Suit]CardColor{
-	CLUBS:    BLACK,
-	DIAMONDS: RED,
-	HEARTS:   RED,
-	SPADES:   BLACK,
+var suitNames = map[Suit]string{
+	CLUBS:    "Clubs",
+	DIAMONDS: "Diamonds",
+	HEARTS:   "Hearts",
+	SPADES:   "Spades",
 }
 
-// CardColor() returns the CardColor associated with the attached Suit.
-func (s *Suit) CardColor() CardColor {
-	return suitColors[*s]
+const suitCount = 4
+
+func (s Suit) String() string {
+	return suitNames[s]
 }
 
 // AllSuits() returns all possible Suit values, which can be used for iteration, checking if a string is a valid Suit value, etc.

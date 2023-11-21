@@ -36,8 +36,10 @@ var rankNames = map[Rank]string{
 	KING:  "King",
 }
 
-func (r *Rank) String() string {
-	return rankNames[*r]
+const rankCount = 13
+
+func (r Rank) String() string {
+	return rankNames[r]
 }
 
 func AllRanks() [13]Rank {
