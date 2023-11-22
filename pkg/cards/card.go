@@ -34,3 +34,12 @@ func (c *Card) isValid() bool {
 func (c *Card) Less(other *Card) bool {
 	return c.Rank < other.Rank
 }
+
+// Score is a function used to compare the typical strength of a card.
+// In particular, it assumes that Ace is a high card (one higher than King).
+func (c *Card) Score() int {
+	if c.Rank == ACE {
+		return int(KING + 1)
+	}
+	return int(c.Rank)
+}

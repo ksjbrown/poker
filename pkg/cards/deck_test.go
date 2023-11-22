@@ -5,7 +5,10 @@ import (
 )
 
 func TestNewDeck(t *testing.T) {
-	var deck = NewDeck()
+	var deck, err = NewDeck()
+	if err != nil {
+		t.Errorf("error creating deck: %v", err)
+	}
 	var want = 52
 
 	// fmt.Print(deck)

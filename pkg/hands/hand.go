@@ -60,11 +60,5 @@ func StandardSort(left cards.Card, right cards.Card) int {
 }
 
 func AceHighSort(left cards.Card, right cards.Card) int {
-	aceHighValue := func(card cards.Card) cards.Rank {
-		if card.Rank == cards.ACE {
-			return cards.KING + 1
-		}
-		return card.Rank
-	}
-	return int(aceHighValue(left) - aceHighValue(right))
+	return left.Score() - right.Score()
 }
