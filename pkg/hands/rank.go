@@ -33,6 +33,10 @@ var rankNames = map[Rank]string{
 	HIGH_CARD:       "High Card",
 }
 
+func (r Rank) String() string {
+	return rankNames[r]
+}
+
 func isStraightFlush(h Hand) bool {
 	return isStraight(h) && isFlush(h)
 }
@@ -68,11 +72,11 @@ func isStraight(h Hand) bool {
 	cs.Sort(cards.StandardSort)
 
 	// check special ace high case
-	if cs[0].Rank == cards.TEN &&
-		cs[1].Rank == cards.JACK &&
-		cs[2].Rank == cards.QUEEN &&
-		cs[3].Rank == cards.KING &&
-		cs[4].Rank == cards.ACE {
+	if cs[0].Rank == cards.ACE &&
+		cs[1].Rank == cards.TEN &&
+		cs[2].Rank == cards.JACK &&
+		cs[3].Rank == cards.QUEEN &&
+		cs[4].Rank == cards.KING {
 		return true
 	}
 	// check each elements Rank value is one greater than the previous element i.e. ranks are sequential

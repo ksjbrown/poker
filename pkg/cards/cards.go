@@ -76,7 +76,7 @@ func ExpectGroupSizes[T comparable](mcs map[T]Cards, sizes ...int) bool {
 		return false
 	}
 	// check group sizes match expected sizes
-	for i := 0; i < len(groups); i++ {
+	for i := 0; i < len(sizes); i++ {
 		if len(groups[i]) != sizes[i] {
 			return false
 		}

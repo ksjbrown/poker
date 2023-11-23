@@ -10,7 +10,7 @@ import (
 type Hand cards.Cards
 
 // NewHand creates a new hand from the argument cards slice, ensuring that number of cards is between 2 and 5
-func NewHand(cs cards.Cards) (*Hand, error) {
+func NewHand(cs ...cards.Card) (*Hand, error) {
 	handSize := len(cs)
 	if handSize < 2 {
 		return nil, fmt.Errorf("hand must contain at least 2 cards")

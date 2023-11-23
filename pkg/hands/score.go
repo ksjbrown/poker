@@ -72,13 +72,14 @@ func (s *Score) Compare(other Score) int {
 	return int(*s - other)
 }
 
-func (h *Hand) Score() Score {
+func (h *Hand) Score() int {
 	rank := h.Rank()
-	return *NewScore(
+	score := NewScore(
 		int(rank),
 		calculateMinor(*h, rank),
 		calculateMicro(*h, rank)...,
 	)
+	return int(*score)
 }
 
 // calculateMinor calculates the correct minor score based on the rank of the hand
@@ -120,7 +121,7 @@ func calculateMicro(h Hand, r Rank) []int {
 	cs.Sort(cards.AceHighSort)
 
 	switch r {
-	case STRAIGHT_FLUSH, FLUSH, STRAIGHT:
+	case STRAIGHT_FLUSH, STRAIGHT:
 		// no kicker cards
 		return []int{0}
 
@@ -135,9 +136,13 @@ func calculateMicro(h Hand, r Rank) []int {
 		grouped := cs.GroupByRank()
 		groups := cards.OrderGroupsByLength(grouped)
 		kickers := cs.GroupBySelection(groups[0])[1]
+		kickerScores := make([]int, 0, len(kickers))
+		for i := len(kickers) - 1; i >= 0; i-- {
+			kickerScores = append(kickerScores, kickers[i].Score())
+		}
 		// kickers are still in face value order, since we sorted at start of the method
 		// we can return them in reverse order to get most significant score at index 0
-		return []int{kickers[1].Score(), kickers[0].Score()}
+		return kickerScores
 
 	case TWO_PAIR:
 		grouped := cs.GroupByRank()
@@ -148,7 +153,7 @@ func calculateMicro(h Hand, r Rank) []int {
 			groups[2][0].Score(),
 		}
 
-	case HIGH_CARD:
+	case HIGH_CARD, FLUSH:
 		// return all cards except the highest card, in reverse order
 		maxIndex := len(cs) - 1
 		return []int{
