@@ -1,7 +1,6 @@
 # Allowlisting gitignore template for GO projects prevents us
 # from adding various unwanted local files, such as generated
 # files, developer configurations or IDE-specific files etc.
-#
 # Recommended: Go.AllowList.gitignore
 
 # Ignore everything
@@ -17,7 +16,11 @@
 !README.md
 !LICENSE
 
-# !Makefile
+!res
 
 # ...even if they are in subdirectories
 !*/
+
+# But these directories should be ignored even if they contain the above folders
+tmp
+vendor
