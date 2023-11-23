@@ -1,5 +1,9 @@
 package cards
 
+import (
+	"strconv"
+)
+
 // Rank defines the possible values of a Card
 // internally represented by a uint8, so numeric comparison is possible.
 type Rank int
@@ -42,20 +46,22 @@ func (r Rank) String() string {
 	return rankNames[r]
 }
 
-func AllRanks() [13]Rank {
-	return [13]Rank{
-		ACE,
-		TWO,
-		THREE,
-		FOUR,
-		FIVE,
-		SIX,
-		SEVEN,
-		EIGHT,
-		NINE,
-		TEN,
-		JACK,
-		QUEEN,
-		KING,
+func (r *Rank) Char() string {
+	if 2 <= *r && *r <= 9 {
+		return strconv.Itoa(int(*r))
 	}
+	return rankNames[*r][:1]
+}
+
+func (r *Rank) isValid() bool {
+	return 0 < *r && *r <= rankCount
+}
+
+// Score is a function used to compare the typical strength of a card.
+// In particular, it assumes that Ace is a high card (one higher than King).
+func (r *Rank) Score() int {
+	if *r == ACE {
+		return int(KING + 1)
+	}
+	return int(*r)
 }

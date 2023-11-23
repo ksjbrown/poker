@@ -2,63 +2,62 @@ package hands
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/ksjbrown/poker/pkg/cards"
 )
 
-const (
-	handMinSize = 2
-	handMaxSize = 5
-)
-
 // Hand represents a combination of a minimum of 2 Cards and up to 5 Cards, which together determine a certain Score.
-type Hand []cards.Card
+type Hand cards.Cards
 
-// NewHand creates a new hand from the argument cards slice
-func NewHand(c []cards.Card) (*Hand, error) {
-	hand := Hand(c)
-	handSize := len(hand)
-	if handSize < handMinSize {
-		return &hand, fmt.Errorf("hand must contain at least 2 cards")
+// NewHand creates a new hand from the argument cards slice, ensuring that number of cards is between 2 and 5
+func NewHand(cs cards.Cards) (*Hand, error) {
+	handSize := len(cs)
+	if handSize < 2 {
+		return nil, fmt.Errorf("hand must contain at least 2 cards")
 	}
-	if handSize > handMaxSize {
-		return &hand, fmt.Errorf("hand must not contain more than 5 cards")
+	if handSize > 5 {
+		return nil, fmt.Errorf("hand must not contain more than 5 cards")
 	}
-	return &hand, nil
+	hand := Hand(cs)
+	copied := hand.Copy()
+	return &copied, nil
 }
 
-// calculateScore analyses the cards available to this hand and returns a HandScore indicating the strength of this Hand relative to other Hands.
-func (h *Hand) calculateScore() Score {
-	panic("not implemented")
+// Copy creates a copy of the underlying array of cards this Hand is based on, and returns a new Hand from these copied cards.
+func (h *Hand) Copy() Hand {
+	cards := cards.Cards(*h)
+	copied := cards.Copy()
+	return Hand(copied)
 }
 
-// CompareTo is a shortcut for comparing a Hand's HandScore to another Hand's HandScore
-func (h *Hand) Compare(other *Hand) int {
-	return h.calculateScore().Compare(other.calculateScore())
+func (h *Hand) String() string {
+	return rankNames[h.Rank()]
 }
 
-func (h *Hand) Cards() []cards.Card {
-	return []cards.Card(*h)
-}
-
-func (h *Hand) Copy() (*Hand, error) {
-	copiedCards := make([]cards.Card, len(*h))
-	copy(copiedCards, h.Cards())
-	hand, err := NewHand(copiedCards)
-	return hand, err
-}
-
-type HandSortAlgorithm func(left cards.Card, right cards.Card) int
-
-func (h *Hand) Sort(algorithm HandSortAlgorithm) {
-	slices.SortFunc(h.Cards(), algorithm)
-}
-
-func StandardSort(left cards.Card, right cards.Card) int {
-	return int(left.Rank - right.Rank)
-}
-
-func AceHighSort(left cards.Card, right cards.Card) int {
-	return left.Score() - right.Score()
+func (h *Hand) Rank() Rank {
+	if isStraightFlush(*h) {
+		return STRAIGHT_FLUSH
+	}
+	if isFourOfAKind(*h) {
+		return FOUR_OF_A_KIND
+	}
+	if isFullHouse(*h) {
+		return FULL_HOUSE
+	}
+	if isFlush(*h) {
+		return FLUSH
+	}
+	if isStraight(*h) {
+		return STRAIGHT
+	}
+	if isThreeOfAKind(*h) {
+		return THREE_OF_A_KIND
+	}
+	if isTwoPair(*h) {
+		return TWO_PAIR
+	}
+	if isOnePair(*h) {
+		return ONE_PAIR
+	}
+	return HIGH_CARD
 }

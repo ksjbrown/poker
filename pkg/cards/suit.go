@@ -22,11 +22,14 @@ var suitNames = map[Suit]string{
 
 const suitCount = 4
 
+func (s *Suit) isValid() bool {
+	return 0 < *s && *s <= suitCount
+}
+
 func (s Suit) String() string {
 	return suitNames[s]
 }
 
-// AllSuits() returns all possible Suit values, which can be used for iteration, checking if a string is a valid Suit value, etc.
-func AllSuits() [4]Suit {
-	return [4]Suit{CLUBS, DIAMONDS, HEARTS, SPADES}
+func (s *Suit) Char() string {
+	return s.String()[:1]
 }
