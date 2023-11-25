@@ -34,7 +34,7 @@ func (h *Hand) String() string {
 	return rankNames[h.Rank()]
 }
 
-func (h *Hand) Rank() Rank {
+func (h *Hand) Rank() HandRank {
 	if isStraightFlush(*h) {
 		return STRAIGHT_FLUSH
 	}

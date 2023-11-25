@@ -4,24 +4,24 @@ import (
 	"github.com/ksjbrown/poker/pkg/cards"
 )
 
-// Rank defines the well-known hand types of poker.
+// HandRank defines the well-known hand types of poker.
 // These are used as the major ranking score when comparing hands
-// Take card not to confuse this struct with the cards.Rank struct, related to the face value of a card.
-type Rank int
+// Take card not to confuse this struct with the cards.HandRank struct, related to the face value of a card.
+type HandRank int
 
 const (
-	STRAIGHT_FLUSH  Rank = 9
-	FOUR_OF_A_KIND  Rank = 8
-	FULL_HOUSE      Rank = 7
-	FLUSH           Rank = 6
-	STRAIGHT        Rank = 5
-	THREE_OF_A_KIND Rank = 4
-	TWO_PAIR        Rank = 3
-	ONE_PAIR        Rank = 2
-	HIGH_CARD       Rank = 1
+	STRAIGHT_FLUSH  HandRank = 9
+	FOUR_OF_A_KIND  HandRank = 8
+	FULL_HOUSE      HandRank = 7
+	FLUSH           HandRank = 6
+	STRAIGHT        HandRank = 5
+	THREE_OF_A_KIND HandRank = 4
+	TWO_PAIR        HandRank = 3
+	ONE_PAIR        HandRank = 2
+	HIGH_CARD       HandRank = 1
 )
 
-var rankNames = map[Rank]string{
+var rankNames = map[HandRank]string{
 	STRAIGHT_FLUSH:  "Straight Flush",
 	FOUR_OF_A_KIND:  "Four of a Kind",
 	FULL_HOUSE:      "Full House",
@@ -33,7 +33,7 @@ var rankNames = map[Rank]string{
 	HIGH_CARD:       "High Card",
 }
 
-func (r Rank) String() string {
+func (r HandRank) String() string {
 	return rankNames[r]
 }
 

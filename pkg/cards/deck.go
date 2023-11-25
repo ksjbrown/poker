@@ -28,7 +28,7 @@ func NewDeck() *Deck {
 	deck := Deck{make(Cards, 0, deckSize), 0}
 	for j := 1; j <= suitCount; j++ {
 		for i := 1; i <= rankCount; i++ {
-			deck.Cards = append(deck.Cards, Card{Rank(i), Suit(j)})
+			deck.Cards = append(deck.Cards, Card{CardRank(i), CardSuit(j)})
 		}
 	}
 	return &deck

@@ -14,13 +14,13 @@ func TestHand_Score(t *testing.T) {
 	}
 
 	// ignore errors for NewCard
-	newCard := func(r cards.Rank, s cards.Suit) cards.Card {
+	newCard := func(r cards.CardRank, s cards.CardSuit) cards.Card {
 		c, _ := cards.NewCard(r, s)
 		return *c
 	}
 
 	tests := []struct {
-		rank  Rank
+		rank  HandRank
 		score int
 		hand  Hand
 	}{

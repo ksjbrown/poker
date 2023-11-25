@@ -5,8 +5,8 @@ import "testing"
 func TestCard_NewCard(t *testing.T) {
 
 	testCases := []struct {
-		rank Rank
-		suit Suit
+		rank CardRank
+		suit CardSuit
 		err  bool
 	}{
 		{ACE, CLUBS, false},

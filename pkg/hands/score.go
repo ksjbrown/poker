@@ -4,7 +4,7 @@ import (
 	"github.com/ksjbrown/poker/pkg/cards"
 )
 
-// Score is a comparison metric for Hand structs.
+// HandScore is a comparison metric for Hand structs.
 //
 // It is stored as a hexadecimal integer containing the values:
 //   - 0xABCCC
@@ -14,7 +14,7 @@ import (
 //   - B: the Minor rank. 	Differentiates between types of hands at different strengths.
 //   - C: the Micro rank. 	Differentiates between equal hands via the remaining "kicker".
 //     There can be up to 4 kicker cards (for high card hand), so we need 4 hex digits here.
-type Score int
+type HandScore int
 
 const (
 	digitWidth  int = 4
@@ -23,8 +23,8 @@ const (
 	majorDigits int = 1
 )
 
-func NewScore(major int, minor int, micro ...int) *Score {
-	var score Score
+func NewScore(major int, minor int, micro ...int) *HandScore {
+	var score HandScore
 	// major
 	score.set(major, majorDigits, minorDigits+microDigits)
 	// minor
@@ -39,19 +39,19 @@ func NewScore(major int, minor int, micro ...int) *Score {
 	return &score
 }
 
-func (s *Score) Major() int {
+func (s *HandScore) Major() int {
 	return s.get(majorDigits, minorDigits+microDigits)
 }
 
-func (s *Score) Minor() int {
+func (s *HandScore) Minor() int {
 	return s.get(minorDigits, microDigits)
 }
 
-func (s *Score) Micro() int {
+func (s *HandScore) Micro() int {
 	return s.get(microDigits, 0)
 }
 
-func (s *Score) get(width int, shift int) int {
+func (s *HandScore) get(width int, shift int) int {
 	width *= digitWidth
 	shift *= digitWidth
 	mask := ((1 << width) - 1) << shift
@@ -59,16 +59,16 @@ func (s *Score) get(width int, shift int) int {
 }
 
 // set unsets the bits where the score should be written (defined by the bit width and shift), and then writes the score to that bit position
-func (s *Score) set(score int, width int, shift int) {
+func (s *HandScore) set(score int, width int, shift int) {
 	width *= digitWidth
 	shift *= digitWidth
 	mask := ((1 << width) - 1) << shift
 	oldValue := int(*s) & mask
 	newValue := score << shift
-	*s = *s + Score(newValue-oldValue)
+	*s = *s + HandScore(newValue-oldValue)
 }
 
-func (s *Score) Compare(other Score) int {
+func (s *HandScore) Compare(other HandScore) int {
 	return int(*s - other)
 }
 
@@ -83,7 +83,7 @@ func (h *Hand) Score() int {
 }
 
 // calculateMinor calculates the correct minor score based on the rank of the hand
-func calculateMinor(h Hand, r Rank) int {
+func calculateMinor(h Hand, r HandRank) int {
 	// sort cards, so we can predict where e.g. highest card is located
 	cs := cards.Cards(h)
 	cs = cs.Copy()
@@ -114,7 +114,7 @@ func calculateMinor(h Hand, r Rank) int {
 }
 
 // calculateMicro calculates the correct micro score based on the rank of the hand
-func calculateMicro(h Hand, r Rank) []int {
+func calculateMicro(h Hand, r HandRank) []int {
 	// sort cards, so we can predict where e.g. highest card is located
 	cs := cards.Cards(h)
 	cs = cs.Copy()
